@@ -1,0 +1,12 @@
+app:
+  timeout: 10
+  port: 8080
+
+database:
+  mongo:
+    uri: mongodb://root:password@localhost:27017/?authSource=admin
+    db: users
+    timeout: 5
+
+
+
