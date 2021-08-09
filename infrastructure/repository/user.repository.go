@@ -10,10 +10,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	c "rpolnx.com.br/mongo-hex/application/config"
-	ce "rpolnx.com.br/mongo-hex/application/error"
-	u "rpolnx.com.br/mongo-hex/domain/model/user"
-	"rpolnx.com.br/mongo-hex/domain/ports/out"
+	c "rpolnx.com.br/golang-hex/application/config"
+	ce "rpolnx.com.br/golang-hex/application/error"
+	u "rpolnx.com.br/golang-hex/domain/model/user"
+	"rpolnx.com.br/golang-hex/domain/ports/out"
 )
 
 type mongoRepository struct {

@@ -8,11 +8,11 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
-	c "rpolnx.com.br/mongo-hex/application/config"
-	"rpolnx.com.br/mongo-hex/application/controller"
-	"rpolnx.com.br/mongo-hex/application/routes"
-	s "rpolnx.com.br/mongo-hex/domain/service/impl"
-	r "rpolnx.com.br/mongo-hex/infrastructure/repository"
+	c "rpolnx.com.br/golang-hex/application/config"
+	"rpolnx.com.br/golang-hex/application/controller"
+	"rpolnx.com.br/golang-hex/application/routes"
+	s "rpolnx.com.br/golang-hex/domain/service/impl"
+	r "rpolnx.com.br/golang-hex/infrastructure/repository"
 )
 
 func LoadServer(config *c.Configuration) (m http.Handler, err error) {

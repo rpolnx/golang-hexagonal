@@ -1,6 +1,6 @@
 package out
 
-import u "rpolnx.com.br/mongo-hex/domain/model/user"
+import u "rpolnx.com.br/golang-hex/domain/model/user"
 
 type UserRepository interface {
 	Get(name string) (*u.User, error)

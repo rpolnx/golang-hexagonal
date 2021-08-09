@@ -1,4 +1,4 @@
-module rpolnx.com.br/mongo-hex
+module rpolnx.com.br/golang-hex
 
 go 1.16
 

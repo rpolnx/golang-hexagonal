@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	c "rpolnx.com.br/mongo-hex/application/config"
-	"rpolnx.com.br/mongo-hex/application/handler"
+	c "rpolnx.com.br/golang-hex/application/config"
+	"rpolnx.com.br/golang-hex/application/handler"
 )
 
 func main() {

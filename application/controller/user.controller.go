@@ -9,9 +9,9 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
 
-	ce "rpolnx.com.br/mongo-hex/application/error"
-	u "rpolnx.com.br/mongo-hex/domain/model/user"
-	"rpolnx.com.br/mongo-hex/domain/service"
+	ce "rpolnx.com.br/golang-hex/application/error"
+	u "rpolnx.com.br/golang-hex/domain/model/user"
+	"rpolnx.com.br/golang-hex/domain/service"
 )
 
 type UserController interface {

@@ -1,7 +1,7 @@
 package service
 
 import (
-	u "rpolnx.com.br/mongo-hex/domain/model/user"
+	u "rpolnx.com.br/golang-hex/domain/model/user"
 )
 
 type UserService interface {

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/go-chi/chi"
-	"rpolnx.com.br/mongo-hex/application/controller"
+	"rpolnx.com.br/golang-hex/application/controller"
 )
 
 func AppendUserRoutes(controller controller.UserController) func(chi.Router) {
