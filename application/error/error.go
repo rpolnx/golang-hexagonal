@@ -9,8 +9,9 @@ import (
 )
 
 var (
-	ErrNotFound = errors.New("Not Found")
-	ErrInvalid  = errors.New("Invalid")
+	ErrNotFound  = errors.New("Not Found")
+	ErrInvalid   = errors.New("Invalid")
+	ErrCacheMiss = errors.New("Cache miss")
 )
 
 var (

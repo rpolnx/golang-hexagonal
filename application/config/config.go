@@ -14,12 +14,24 @@ type Configuration struct {
 
 type Database struct {
 	Mongo
+	Redis
 }
 
 type Mongo struct {
 	Uri     string
 	Db      string
 	Timeout int
+}
+
+type Redis struct {
+	Host        string
+	Username    string
+	Password    string
+	Db          int
+	Timeout     int
+	Ttl         int
+	PoolSize    int
+	IdleTimeout int
 }
 
 type App struct {

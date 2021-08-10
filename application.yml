@@ -1,12 +1,18 @@
 app:
-  timeout: 10
+  timeout: 60
   port: 8080
 
 database:
   mongo:
     uri: mongodb://root:password@localhost:27017/?authSource=admin
     db: users
-    timeout: 5
-
-
-
+    timeout: 10
+  redis:
+    host: "localhost:6379"
+    user: redis_user
+    password: redis_pass
+    db: 0
+    timeout: 10 # seconds
+    ttl: 15 # minutes
+    poolSize: 10 # seconds
+    idleTimeout: 120 # seconds
