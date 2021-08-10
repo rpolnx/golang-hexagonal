@@ -16,8 +16,12 @@ type userService struct {
 	repository out.UserRepository
 }
 
+func (u *userService) GetAll() ([]u.User, error) {
+	return u.repository.FindAll()
+}
+
 func (u *userService) Get(name string) (*u.User, error) {
-	return u.repository.Get(name)
+	return u.repository.Find(name)
 }
 
 func (u *userService) Post(user *u.User) error {

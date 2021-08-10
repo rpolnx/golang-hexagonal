@@ -5,6 +5,7 @@ import (
 )
 
 type UserService interface {
+	GetAll() ([]u.User, error)
 	Get(name string) (*u.User, error)
 	Post(*u.User) error
 	Delete(name string) error
