@@ -21,11 +21,11 @@ func main() {
 	server, err := handler.LoadServer(config)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Fatal error: %v\n", err)
+		log.Printf("Fatal error: %v %v\n", os.Stderr, err)
 		panic(err)
 	}
 
-	fmt.Println("Server started at port", config.Port)
+	log.Println("Server started at port", config.Port)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), server))
 }
