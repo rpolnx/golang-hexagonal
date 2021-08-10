@@ -2,11 +2,11 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/pkg/errors"
 
 	ce "rpolnx.com.br/golang-hex/application/error"
@@ -15,13 +15,14 @@ import (
 )
 
 type UserController interface {
+	GetAll(http.ResponseWriter, *http.Request)
 	Get(http.ResponseWriter, *http.Request)
 	Post(http.ResponseWriter, *http.Request)
 	Delete(http.ResponseWriter, *http.Request)
 }
 
 type controller struct {
-	c service.UserService
+	s service.UserService
 }
 
 func NewUserController(userService service.UserService) UserController {
@@ -30,35 +31,58 @@ func NewUserController(userService service.UserService) UserController {
 	}
 }
 
+func (c *controller) GetAll(w http.ResponseWriter, r *http.Request) {
+	users, err := c.s.GetAll()
+
+	if err != nil {
+		if errors.Cause(err) == ce.ErrNotFound {
+			log.Println(err)
+
+			render.Render(w, r, ce.ErrResponseNotFound)
+			return
+		}
+		render.Render(w, r, ce.ErrRender(err))
+		return
+	}
+
+	body, err := json.Marshal(users)
+
+	if err != nil {
+		render.Render(w, r, ce.ErrRender(err))
+		return
+	}
+
+	setupResponse(w, body, 200)
+}
+
 func (c *controller) Get(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "name")
 
-	fmt.Println(name)
-
 	if name == "" {
-		// buildResponse(http.StatusText(http.StatusBadRequest))
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		render.Render(w, r, ce.ErrInvalidRequest(ce.ErrInvalid))
 		return
 	}
 
-	user, err := c.c.Get(name)
+	user, err := c.s.Get(name)
 	if err != nil {
 		if errors.Cause(err) == ce.ErrNotFound {
-			fmt.Println(err)
+			log.Println(err)
 
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			render.Render(w, r, ce.ErrResponseNotFound)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Render(w, r, ce.ErrRender(err))
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(user)
+	body, err := json.Marshal(user)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Render(w, r, ce.ErrRender(err))
 		return
 	}
+
+	setupResponse(w, body, 200)
 }
 
 func (h *controller) Post(w http.ResponseWriter, r *http.Request) {
@@ -67,18 +91,18 @@ func (h *controller) Post(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Render(w, r, ce.ErrRender(err))
 		return
 	}
 
-	err = h.c.Post(&user)
+	err = h.s.Post(&user)
 
 	if err != nil {
 		if errors.Cause(err) == ce.ErrInvalid {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			render.Render(w, r, ce.ErrInvalidRequest(ce.ErrInvalid))
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Render(w, r, ce.ErrRender(err))
 		return
 	}
 }
@@ -87,28 +111,27 @@ func (c *controller) Delete(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "name")
 
 	if name == "" {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		render.Render(w, r, ce.ErrInvalidRequest(ce.ErrInvalid))
 		return
 	}
 
-	err := c.c.Delete(name)
+	err := c.s.Delete(name)
 	if err != nil {
 		if errors.Cause(err) == ce.ErrNotFound {
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			render.Render(w, r, ce.ErrResponseNotFound)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Render(w, r, ce.ErrRender(err))
 		return
 	}
-	w.WriteHeader(204)
+	render.Status(r, 204)
 }
 
-func buildResponse(i interface{}) []byte {
-	res, err := json.Marshal(i)
-
+func setupResponse(w http.ResponseWriter, body []byte, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	_, err := w.Write(body)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "user.controller.buildResponse"))
+		log.Println(err)
 	}
-
-	return res
 }
