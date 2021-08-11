@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -81,15 +82,23 @@ func (r *redisRepository) Get(name string) (*u.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
-	user := &u.User{}
+	var b []byte
 
-	err := r.cache.Get(ctx, fmt.Sprintf(PATTERN, name), &user)
+	err := r.cache.Get(ctx, fmt.Sprintf(PATTERN, name), &b)
+
 	if err != nil {
 		if err == cache.ErrCacheMiss {
 			return nil, ce.ErrCacheMiss
 		}
 		return nil, errors.Wrap(err, "repository.redis.Get")
 	}
+
+	user := &u.User{}
+
+	if err := json.Unmarshal(b, &user); err != nil {
+		return nil, err
+	}
+
 	return user, nil
 }
 
@@ -97,10 +106,16 @@ func (r *redisRepository) Set(user *u.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
-	err := r.cache.Set(&cache.Item{
+	b, err := json.Marshal(user)
+
+	if err != nil {
+		return errors.Wrap(err, "repository.redis.Set")
+	}
+
+	err = r.cache.Set(&cache.Item{
 		Ctx:   ctx,
 		Key:   fmt.Sprintf(PATTERN, user.Name),
-		Value: user,
+		Value: b,
 		TTL:   r.ttl,
 	})
 
