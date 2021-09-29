@@ -9,6 +9,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.2
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.8.1
+	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.7.1
 	gopkg.in/dealancer/validate.v2 v2.1.0
 )
